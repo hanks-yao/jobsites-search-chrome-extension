@@ -1,0 +1,33 @@
+indeed
+parent_class : row/result/clickcard
+element_class :   job title -> a.class="jobtitle turnstileLink"/data-tn-element="jobTitle"
+                               h2.class="jobtitle"+a.class="turnstileLink"/data-tn-element="jobTitle"
+                  company   -> span.class="company"+a
+                  location  -> span.class="location"
+                  date      -> span.class="date"   /   sponsored -> class="sponsoredGray"
+
+                  Headquarters  #cmp-company-details-sidebar > dd:nth-child(2)
+                  Revenue       #cmp-company-details-sidebar > dd:nth-child(4)
+                  Employees     #cmp-company-details-sidebar > dd:nth-child(6)
+                  Industry      #cmp-company-details-sidebar > dd:nth-child(8) > ul > li > a
+                  Website       #cmp-company-details-sidebar > dd:nth-child(10) > a:nth-child(3)
+
+glassdoor
+wrapper #MainCol
+parent: .jlGrid
+element: .jl
+	title: a.jobLink
+	company: .empLoc
+		location: .subtle.loc
+	date: .hideHH > minor
+
+more_parent: .info
+element: .infoEntity
+	key: label
+	value: span.value
+
+
+
+#MainCol > div > ul > li:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a
+
+#MainCol > div > ul > li:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a
