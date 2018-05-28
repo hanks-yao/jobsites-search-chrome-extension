@@ -1,7 +1,7 @@
 console.log('content_scritp loaded!');
 
 let fun = {
-  getBasicInfo: function(){
+  getBasicInfo: function(filter){
     let $parents = $('.clickcard');
     let result = [];
 
@@ -10,6 +10,12 @@ let fun = {
           element = {};
 
       element['job_title'] = $parent.find('[data-tn-element="jobTitle"]').text().trim();
+
+      //过滤title中不包含keywords的job
+      if ((filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
+        continue;
+      }
+
       element['location'] = $parent.find('.location').text().trim();
       element['date'] = $parent.find('.date').text().trim();
 
@@ -104,7 +110,18 @@ let fun = {
     // let page =
   },
   isLastPage: function() {
-    return $('.pagination').children('a:last').text().trim() != 'Next »'
+    return $('.pagination').children('a:last').text().trim() != 'Next »';
+  },
+  includeKeywords: function(target, keywords) {
+    let t = target.toLocaleLowerCase();
+
+    for ( let n in keywords) {
+      let k = keywords[n].toLocaleLowerCase();
+
+      if (t.indexOf(k) > -1) {return true}
+    }
+
+    return false;
   },
 };
 
@@ -131,7 +148,17 @@ $(document).ready(function() {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 
-    if (request.crawlDetailedInfo) { //新开的window监听backgournd发送抓取detail的请求
+    if (request.setParameters) {
+      console.log("setParameters");
+      console.log(request);
+
+      let location = request.config.location;
+
+      $('#where').val(location);
+      $('#fj').click();
+
+      sendResponse(true);
+    } else if (request.crawlDetailedInfo) { //新开的window监听backgournd发送抓取detail的请求
       console.log("crawlDetailedInfo:");
       console.log(request);
 
@@ -143,11 +170,14 @@ chrome.runtime.onMessage.addListener(
       console.log("crawlBasicInfo:");
       console.log(request);
 
-      let pages = request.pages,
+      // let pages = request.pages,
+      //     res = {};
+      let filter = request.filter,
           res = {};
-      res['data'] = fun.getBasicInfo(),
-      res['current_page'] = fun.getCurrentPage(),
-      res['is_last'] = fun.isLastPage();
+
+      res['data'] = fun.getBasicInfo(filter),
+      //res['current_page'] = fun.getCurrentPage(),//TO DEl
+      //res['is_last'] = fun.isLastPage();//TO DEl
 
       sendResponse(res);
     } else if (request.gotoNextPage) {

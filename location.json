@@ -1,0 +1,402 @@
+{
+    "AL":
+    {
+        "location": "AL",
+        "location_type": "S",
+        "location_id": "105",
+        "name": "Alabama",
+        "cn_name": "亚拉巴马州"
+    },
+    "AK":
+    {
+        "location": "AK",
+        "location_type": "S",
+        "location_id": "496",
+        "name": "Alaska",
+        "cn_name": "阿拉斯加州"
+    },
+    "AZ":
+    {
+        "location": "AZ",
+        "location_type": "S",
+        "location_id": "483",
+        "name": "Arizona",
+        "cn_name": "亚利桑那州"
+    },
+    "AR":
+    {
+        "location": "AR",
+        "location_type": "S",
+        "location_id": "1892",
+        "name": "Arkansas",
+        "cn_name": "阿肯色州"
+    },
+    "CA":
+    {
+        "location": "CA",
+        "location_type": "S",
+        "location_id": "2280",
+        "name": "California",
+        "cn_name": "加利福尼亚州"
+    },
+    "CO":
+    {
+        "location": "CO",
+        "location_type": "S",
+        "location_id": "2519",
+        "name": "Colorado",
+        "cn_name": "科罗拉多州"
+    },
+    "CT":
+    {
+        "location": "CT",
+        "location_type": "S",
+        "location_id": "2697",
+        "name": "Connecticut",
+        "cn_name": "康涅狄格州"
+    },
+    "DE":
+    {
+        "location": "DE",
+        "location_type": "S",
+        "location_id": "3523",
+        "name": "Delaware",
+        "cn_name": "特拉华州"
+    },
+    "FL":
+    {
+        "location": "FL",
+        "location_type": "S",
+        "location_id": "3318",
+        "name": "Florida",
+        "cn_name": "佛罗里达州"
+    },
+    "GA":
+    {
+        "location": "GA",
+        "location_type": "S",
+        "location_id": "3426",
+        "name": "Georgia",
+        "cn_name": "佐治亚州"
+    },
+    "HI":
+    {
+        "location": "HI",
+        "location_type": "S",
+        "location_id": "1385",
+        "name": "Hawaii",
+        "cn_name": "夏威夷州"
+    },
+    "ID":
+    {
+        "location": "ID",
+        "location_type": "S",
+        "location_id": "132",
+        "name": "Idaho",
+        "cn_name": "爱达荷州"
+    },
+    "IL":
+    {
+        "location": "IL",
+        "location_type": "S",
+        "location_id": "302",
+        "name": "Illinois",
+        "cn_name": "伊利诺伊州"
+    },
+    "IN":
+    {
+        "location": "IN",
+        "location_type": "S",
+        "location_id": "2124",
+        "name": "Indiana",
+        "cn_name": "印第安纳州"
+    },
+    "IA":
+    {
+        "location": "IA",
+        "location_type": "S",
+        "location_id": "2733",
+        "name": "Iowa",
+        "cn_name": "艾奥瓦州"
+    },
+    "KS":
+    {
+        "location": "KS",
+        "location_type": "S",
+        "location_id": "3107",
+        "name": "Kansas",
+        "cn_name": "堪萨斯州"
+    },
+    "KY":
+    {
+        "location": "KY",
+        "location_type": "S",
+        "location_id": "1141",
+        "name": "Kentucky",
+        "cn_name": "肯塔基州"
+    },
+    "LA":
+    {
+        "location": "LA",
+        "location_type": "S",
+        "location_id": "2792",
+        "name": "Louisiana",
+        "cn_name": "路易斯安那州"
+    },
+    "ME":
+    {
+        "location": "ME",
+        "location_type": "S",
+        "location_id": "758",
+        "name": "Maine",
+        "cn_name": "缅因州"
+    },
+    "MD":
+    {
+        "location": "MD",
+        "location_type": "S",
+        "location_id": "3201",
+        "name": "Maryland",
+        "cn_name": "马里兰州"
+    },
+    "MA":
+    {
+        "location": "MA",
+        "location_type": "S",
+        "location_id": "3399",
+        "name": "Massachusetts",
+        "cn_name": "马萨诸塞州"
+    },
+    "MI":
+    {
+        "location": "MI",
+        "location_type": "S",
+        "location_id": "527",
+        "name": "Michigan",
+        "cn_name": "密歇根州"
+    },
+    "MN":
+    {
+        "location": "MN",
+        "location_type": "S",
+        "location_id": "1775",
+        "name": "Minnesota",
+        "cn_name": "明尼苏达州"
+    },
+    "MS":
+    {
+        "location": "MS",
+        "location_type": "S",
+        "location_id": "1553",
+        "name": "Mississippi",
+        "cn_name": "密西西比州"
+    },
+    "MO":
+    {
+        "location": "MO",
+        "location_type": "S",
+        "location_id": "386",
+        "name": "Missouri",
+        "cn_name": "密苏里州"
+    },
+    "MT":
+    {
+        "location": "MT",
+        "location_type": "S",
+        "location_id": "669",
+        "name": "Montana",
+        "cn_name": "蒙大拿州"
+    },
+    "NE":
+    {
+        "location": "NE",
+        "location_type": "S",
+        "location_id": "792",
+        "name": "Nebraska",
+        "cn_name": "内布拉斯加州"
+    },
+    "NV":
+    {
+        "location": "NV",
+        "location_type": "S",
+        "location_id": "2756",
+        "name": "Nevada",
+        "cn_name": "内华达州"
+    },
+    "NH":
+    {
+        "location": "NH",
+        "location_type": "S",
+        "location_id": "2403",
+        "name": "New Hampshire",
+        "cn_name": "新罕布什尔州"
+    },
+    "NJ":
+    {
+        "location": "NJ",
+        "location_type": "S",
+        "location_id": "39",
+        "name": "New Jersey",
+        "cn_name": "新泽西州"
+    },
+    "NM":
+    {
+        "location": "NM",
+        "location_type": "S",
+        "location_id": "1181",
+        "name": "New Mexico",
+        "cn_name": "新墨西哥州"
+    },
+    "NY":
+    {
+        "location": "NY",
+        "location_type": "S",
+        "location_id": "428",
+        "name": "New York",
+        "cn_name": "纽约州"
+    },
+    "NC":
+    {
+        "location": "NC",
+        "location_type": "S",
+        "location_id": "1282",
+        "name": "North Carolina",
+        "cn_name": "北卡罗来纳州"
+    },
+    "ND":
+    {
+        "location": "ND",
+        "location_type": "S",
+        "location_id": "3517",
+        "name": "North Dakota",
+        "cn_name": "北达科他州"
+    },
+    "OH":
+    {
+        "location": "OH",
+        "location_type": "S",
+        "location_id": "2235",
+        "name": "Ohio",
+        "cn_name": "俄亥俄州"
+    },
+    "OK":
+    {
+        "location": "OK",
+        "location_type": "S",
+        "location_id": "847",
+        "name": "Oklahoma",
+        "cn_name": "俄克拉何马州"
+    },
+    "OR":
+    {
+        "location": "OR",
+        "location_type": "S",
+        "location_id": "3163",
+        "name": "Oregon",
+        "cn_name": "俄勒冈州"
+    },
+    "PA":
+    {
+        "location": "PA",
+        "location_type": "S",
+        "location_id": "3185",
+        "name": "Pennsylvania",
+        "cn_name": "宾夕法尼亚州"
+    },
+    "RI":
+    {
+        "location": "RI",
+        "location_type": "S",
+        "location_id": "3156",
+        "name": "Rhode Island",
+        "cn_name": "罗得岛州"
+    },
+    "SC":
+    {
+        "location": "SC",
+        "location_type": "S",
+        "location_id": "3411",
+        "name": "South Carolina",
+        "cn_name": "南卡罗来纳州"
+    },
+    "SD":
+    {
+        "location": "SD",
+        "location_type": "S",
+        "location_id": "1502",
+        "name": "South Dakota",
+        "cn_name": "南达科他州"
+    },
+    "TN":
+    {
+        "location": "TN",
+        "location_type": "S",
+        "location_id": "1968",
+        "name": "Tennessee",
+        "cn_name": "田纳西州"
+    },
+    "TX":
+    {
+        "location": "TX",
+        "location_type": "S",
+        "location_id": "1347",
+        "name": "Texas",
+        "cn_name": "得克萨斯州"
+    },
+    "UT":
+    {
+        "location": "UT",
+        "location_type": "S",
+        "location_id": "255",
+        "name": "Utah",
+        "cn_name": "犹他州"
+    },
+    "VT":
+    {
+        "location": "VT",
+        "location_type": "S",
+        "location_id": "1765",
+        "name": "Vermont",
+        "cn_name": "佛蒙特州"
+    },
+    "VA":
+    {
+        "location": "VA",
+        "location_type": "S",
+        "location_id": "323",
+        "name": "Virginia",
+        "cn_name": "弗吉尼亚州"
+    },
+    "WA":
+    {
+        "location": "WA",
+        "location_type": "S",
+        "location_id": "3020",
+        "name": "Washington",
+        "cn_name": "华盛顿州"
+    },
+    "WV":
+    {
+        "location": "WV",
+        "location_type": "S",
+        "location_id": "1939",
+        "name": "West Virginia",
+        "cn_name": "西弗吉尼亚州"
+    },
+    "WI":
+    {
+        "location": "WI",
+        "location_type": "S",
+        "location_id": "481",
+        "name": "Wisconsin",
+        "cn_name": "威斯康星州"
+    },
+    "WY":
+    {
+        "location": "WY",
+        "location_type": "S",
+        "location_id": "1258",
+        "name": "Wyoming",
+        "cn_name": "怀俄明州"
+    }
+}

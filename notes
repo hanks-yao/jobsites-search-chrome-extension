@@ -31,3 +31,38 @@ element: .infoEntity
 #MainCol > div > ul > li:nth-child(1) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a
 
 #MainCol > div > ul > li:nth-child(3) > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a
+
+0 All Sizes
+1 0-200 employees
+2 201-500 employees
+3 501-1000 employees
+4 1001-5000 employees
+5 5001+ employees
+
+hr/boston/biotech/0-200
+https://www.glassdoor.com/Job/boston-hr-jobs-SRCH_IL.0,6_IC1154532_KO7,9_IP2.htm?industryId=1020&employerSizes=1
+
+https://www.glassdoor.com/Job/alaska-manager-jobs-SRCH_IL.0,6_IS496_KO7,14.htm
+
+Alabama
+https://www.glassdoor.com/Job/alabama-manager-jobs-SRCH_IL.0,7_IS105_KO8,15.htm
+
+Arizona
+https://www.glassdoor.com/Job/arizona-manager-jobs-SRCH_IL.0,7_IS483_KO8,15.htm
+
+California
+https://www.glassdoor.com/Job/california-manager-jobs-SRCH_IL.0,10_IS2280_KO11,18.htm
+https://www.glassdoor.com/Job/california-hr-jobs-SRCH_IL.0,10_IS2280_KO11,13.htm
+
+ok
+https://www.glassdoor.com/Job/oklahoma-hr-jobs-SRCH_IL.0,8_IS847_KO9,11.htm
+https://www.glassdoor.com/Job/oklahoma-it-jobs-SRCH_IL.0,8_IS847_KE9,11.htm
+https://www.glassdoor.com/Job/oklahoma-manager-jobs-SRCH_IL.0,8_IS847_KO9,16.htm
+
+https://www.glassdoor.com/Job/new-mexico-hr-jobs-SRCH_IL.0,10_IS1181_KO11,13_IP2.htm
+
+https://www.glassdoor.com/Job/new-york-state-hr-jobs-SRCH_IL.0,14_IS428_KO15,17_IP2.htm?industryId=1021&employerSizes=2
+https://www.glassdoor.com/Job/new-mexico-hr-jobs-SRCH_IL.0,10_IS1181_KO11,13.htm?industryId=1055
+https://www.glassdoor.com/Job/new-mexico-hr-jobs-SRCH_IL.0,10_IS1181_KO11,13.htm?industryId=1000&employerSizes=1
+
+https://www.glassdoor.com/Job/new-mexico-hr-jobs-SRCH_IL.0,10_IS1181_KO11,13.htm?industryId=1000&employerSizes=1

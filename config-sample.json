@@ -1,0 +1,7 @@
+//多个参数值直接用逗号隔开
+{
+	"keywords": "it,tech",
+	"location": "NY,MA",
+	"size": "1,2",
+	"industry": "1000,1020"
+}

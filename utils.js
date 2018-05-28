@@ -105,4 +105,32 @@ var ufn = {
 
     return true;
   },
+  getIndustry: function() {
+    let result = [],
+        $lis = $('.flyout').children('li');
+
+    for (let i = 0; i < $lis.length; i++) {
+      let $li = $($lis[i]),
+          $text = $li.children('.label'),
+          element = {};
+
+      element['id'] = $li.val();
+      let temp = $text.text();
+
+      let index = temp.indexOf('(');
+
+      element['industry'] = temp.slice(0, index)
+
+      result.push(element);
+
+    }
+    ufn.exportCsv({
+      title:['ID','Industry',],
+      titleForKey:['id', 'industry'],
+      data: result,
+      fileName: 'industry',
+    });
+
+    console.log(result);
+  }
 };

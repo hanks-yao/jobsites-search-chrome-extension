@@ -16,6 +16,22 @@ $(document).ready(function() {
       });
     }
   });
+
+  $('#file').on('change', function(event) {
+    event.preventDefault();
+    var file = this.files[0];
+    var reader = new FileReader();
+
+    reader.onload = function() {
+      let content = this.result;
+
+      let config = JSON.stringify(JSON.parse(content));
+      console.log(config);
+      localStorage.setItem('config',config);
+    };
+
+    reader.readAsText(file);
+  });
 });
 
 chrome.runtime.onMessage.addListener(
