@@ -488,6 +488,8 @@ function getConfig(key) {
   console.log('getConfig:', key);
   let config = JSON.parse(localStorage.getItem('config'));
 
+  if (!config) {return;}
+
   //TODO, 处理配置文件, 将参数处理成js对象格式
   for (let key in config) {
     config[key] = config[key].split(',')

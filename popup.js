@@ -1,3 +1,38 @@
+var fun = {
+  refreshConfigDiv: function(){
+    let config = JSON.parse(localStorage.getItem('config'));
+    let html = '';
+
+    if (config) {
+      $('#resetBtn').show();
+      $('#uploadDiv').hide();
+
+      for (let key in config) {
+        config[key] = config[key].split(',').join(', ');
+        html += `<div class="form-group"><label>${key}:</label><p style="">${config[key]}</p></div>`;
+      }
+      $('#setting-wrap').html(html);
+    } else {
+      $('#setting-wrap').empty();
+      $('#resetBtn').hide();
+      $('#uploadDiv').show()
+
+      let h = $('.wrapper').height();
+      $('body').height(h);
+      $('html').height(h);
+    }
+
+  },
+};
+
+(function(){
+  console.log(123);
+  fun.refreshConfigDiv();
+})();
+
+
+
+
 $(document).ready(function() {
   $('#startBtn').on('click', function(event) {
     event.preventDefault();
@@ -17,10 +52,17 @@ $(document).ready(function() {
     }
   });
 
+  $('#resetBtn').on('click', function(event) {
+    localStorage.clear();
+    fun.refreshConfigDiv();
+  });
+
   $('#file').on('change', function(event) {
     event.preventDefault();
     var file = this.files[0];
     var reader = new FileReader();
+
+    reader.readAsText(file);
 
     reader.onload = function() {
       let content = this.result;
@@ -28,9 +70,10 @@ $(document).ready(function() {
       let config = JSON.stringify(JSON.parse(content));
       console.log(config);
       localStorage.setItem('config',config);
+
+      fun.refreshConfigDiv();
     };
 
-    reader.readAsText(file);
   });
 });
 

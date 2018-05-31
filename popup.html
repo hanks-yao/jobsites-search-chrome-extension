@@ -21,8 +21,16 @@
         text-align: center;
         color: #333;
       }
-      .form-group {
-
+      .form-group label {
+        text-transform: capitalize;
+        font-weight: 600;
+        color: #aaa;
+      }
+      .form-group p {
+        margin-top: 0;
+        margin-bottom: 10px;
+        font-size: 14px;
+        color: #333;
       }
 
       button {
@@ -39,11 +47,13 @@
             <label for="pages">Pages:</label>
             <input type="number" id="pages" style="margin:5px 0;width:100%;">
           </div>
-          <div class="form-group">
+          <div class="form-group" id="uploadDiv">
             <label for="file">File:</label>
             <input type="file" id="file" style="margin:5px 0;width:100%;">
           </div>
+          <div id="setting-wrap"></div>
           <div style="text-align:center" id="btnDiv">
+            <button type="button" id="resetBtn" hidden>Reset</button>
             <button type="button" id="startBtn">Start</button>
           </div>
           <div style="text-align:center;display:none" id="tipsDiv">

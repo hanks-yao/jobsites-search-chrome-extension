@@ -1,11 +1,11 @@
 {
   "name": "Jobsites Search",
   "description": "Jobsites Search",
-  "version": "0.1.0",
+  "version": "0.3",
   "manifest_version": 2,
   "permissions": ["tabs","declarativeContent"],
   "background": {
-    "scripts": ["asset/jquery-2.0.3.js", "utils.js", "background.js"],
+    "scripts": ["asset/jquery-2.0.3.js", "js/utils.js", "background.js"],
     "persistent": false
   },
   "page_action": {
@@ -15,10 +15,10 @@
   "content_scripts": [
     {
       "matches": ["*://www.indeed.com/*"],
-      "js": ["asset/jquery-2.0.3.js", "utils.js", "content_script.js"]
+      "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script.js"]
     }, {
       "matches": ["*://www.glassdoor.com/Job*"],
-      "js": ["asset/jquery-2.0.3.js", "utils.js", "content_script_glassdoor.js"]
+      "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script_glassdoor.js"]
     }
   ],
   "icons": {

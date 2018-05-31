@@ -12,7 +12,7 @@ let fun = {
       element['job_title'] = $parent.find('[data-tn-element="jobTitle"]').text().trim();
 
       //过滤title中不包含keywords的job
-      if ((filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
+      if (filter && (filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
         continue;
       }
 
