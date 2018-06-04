@@ -1,11 +1,11 @@
 {
   "name": "Jobsites Search",
   "description": "Jobsites Search",
-  "version": "0.3",
+  "version": "0.4",
   "manifest_version": 2,
   "permissions": ["tabs","declarativeContent"],
   "background": {
-    "scripts": ["asset/jquery-2.0.3.js", "js/utils.js", "background.js"],
+    "scripts": ["asset/jquery-2.0.3.js", "js/utils.js", "js/db.js", "background.js"],
     "persistent": false
   },
   "page_action": {

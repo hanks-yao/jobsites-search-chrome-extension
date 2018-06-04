@@ -63,33 +63,44 @@ async function getBasis(pages) {
   console.log('getBasis');
 
   let config = getConfig();
+  let tab = await getCurrentTab();
 
   if (config) {
-    return await getBasisByConfig(pages, config);
+    return await getBasisByConfig(tab, pages, config);
   } else {
-    return await getBasisByDefault(pages);
+    return await getBasisByDefault(tab, pages);
   }
 }
 
 // common
-async function getBasisByDefault(pages) {
+async function getBasisByDefault(tab, pages) {
   console.log('getBasisByDefault');
 
-  let tab,
+  let tabId = tab.id,
       temp,
       records = [];
+
+  let keywords = getConfig('keywords');
 
   for (let i = 1 ; i <= pages; i++) {
     setPopupTips(`Getting jobs : ${i}/${pages}`);
 
-    do {
-      await delayXSeconds(2);
+    // do {
+    //   await delayXSeconds(2);
 
-      tab = await getCurrentTab();
-    } while (!tab);
+    //   tab = await getCurrentTab();
+    // } while (!tab);
 
+    await isTabComplete(tabId);
 
-    temp = await requestBasis(tab.id);
+    temp = await requestBasis(tabId, keywords);
+
+    while(!temp){
+      await reloadTab(tabId);
+      await isTabComplete(tabId);
+
+      temp = await requestBasis(tabId, keywords);
+    }
 
     records = records.concat(temp.data);
 
@@ -109,21 +120,15 @@ async function getBasisByDefault(pages) {
 }
 
 // common
-async function getBasisByConfig(pages, config) {
+async function getBasisByConfig(tab, pages, config) {
   console.log('getBasisByConfig:');
   console.log(config);
 
-  let tab = await getCurrentTab(),
+  let tabUrl = tab.url,
+      tabId  = tab.id,
       records = [];
 
-  while(!tab) {
-    await delayXSeconds(2);
-
-    tab = await getCurrentTab();
-  }
-
-  let tabUrl = tab.url,
-      tabId  = tab.id;
+  await isTabComplete(tabId);
 
   if (tabUrl.indexOf('indeed.com') > -1) {
     //发送配置信息给content script
@@ -133,7 +138,7 @@ async function getBasisByConfig(pages, config) {
 
     for (let n in locationArray) {
       if(await sendConfig(tabId, {location: locationArray[n]})) {
-        let temp = await getBasisByDefault(pages);
+        let temp = await getBasisByDefault(tab, pages);
 
         records = records.concat(temp.data);
       }
@@ -166,7 +171,7 @@ async function getBasisByConfig(pages, config) {
 
           await setConfig(tabId, url, industryArray[m], sizeArray[n]);
 
-          let temp = await getBasisByDefault(pages);
+          let temp = await getBasisByDefault(tab, pages);
 
           records = records.concat(temp.data);
         }
@@ -180,18 +185,16 @@ async function getBasisByConfig(pages, config) {
   console.log(records);
 
   return {
-    tab_id: tab.id,
-    tab_url: tab.url,
+    tab_id: tabId,
+    tab_url: tabUrl,
     data: records
   };
 }
 
 // common
 // 根据tabid, 发送抓取basis信息请求
-function requestBasis(tabId) {
+function requestBasis(tabId, keywords) {
   console.log('requestBasis');
-
-  let keywords = getConfig('keywords');
 
   return new Promise(function(resolve, reject){
     chrome.tabs.sendMessage(tabId, {crawlBasicInfo: true, filter: keywords}, function(response) {
@@ -314,6 +317,8 @@ async function getUrlByLoc(tabId, location){
 
   //获取下一页的链接, 并处理url, ?industryId=1011&employerSizes=1
   let url = await getNextPageUrl(tabId);
+  // if (!url) {}
+
   let index = url.lastIndexOf('_IP2');
 
   url = url.slice(0, index) + '.htm';
@@ -469,6 +474,16 @@ function getTab(id){
   });
 }
 
+// 重载指定id的tab
+function reloadTab(id){
+  return new Promise(function(resolve, reject){
+    chrome.tabs.reload(id, {bypassCache: true}, function(res){
+      console.log(res);
+      resolve(res);
+    })
+  });
+}
+
 // 指定tabId的页面是否加载完成
 async function isTabComplete(tabId){
   console.log("isTabComplete:");
@@ -562,10 +577,20 @@ function requestDownload(tabId, jobs) {
   });
 }
 
-function test(){
-  let a = 'abc ABC ccc, efg',
-      b = 'abc',
-      c = 'Ccc';
-  console.log(a.search(b));
-  console.log(a.search(c));
+/**
+ * 创建并下载文件
+ * @param  {String} fileName 文件名
+ * @param  {String} content  文件内容
+ */
+function createAndDownloadFile(content) {
+  let fileName = "test.json";
+  content = JSON.stringify(content);
+
+  var aTag = document.createElement('a');
+  var blob = new Blob([content]);
+
+  aTag.download = fileName;
+  aTag.href = URL.createObjectURL(blob);
+  aTag.click();
+  URL.revokeObjectURL(blob);
 }

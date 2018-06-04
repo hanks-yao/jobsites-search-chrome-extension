@@ -32,72 +32,90 @@ var ufn = {
   },
   exportCsv: function (obj) {
 
-    // var datas = obj.data;
+    // let datas = obj.data;
     //处理字符串中的, "
-    obj['data'] = obj['data'].map(function(elem) {
+    // obj['data'] = obj['data'].map(function(elem) {
 
-      if (elem['job_title'] && /[",\r\n]/g.test(elem['job_title'])) {
-        elem['job_title'] = '"' + elem['job_title'].replace(/(")/g, '""') + '"';
+    //   if (elem['job_title'] && /[",\r\n]/g.test(elem['job_title'])) {
+    //     elem['job_title'] = '"' + elem['job_title'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['company'] && /[",\r\n]/g.test(elem['company'])) {
+    //     elem['company'] = '"' + elem['company'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['industry'] && /[",\r\n]/g.test(elem['industry'])) {
+    //     elem['industry'] = '"' + elem['industry'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['location'] && /[",\r\n]/g.test(elem['location'])) {
+    //     elem['location'] = '"' + elem['location'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['headquarters'] && /[",\r\n]/g.test(elem['headquarters'])) {
+    //     elem['headquarters'] = '"' + elem['headquarters'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['date'] && /[",\r\n]/g.test(elem['date'])) {
+    //     elem['date'] = '"' + elem['date'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['employees'] && /[",\r\n]/g.test(elem['employees'])) {
+    //     elem['employees'] = '"' + elem['employees'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['revenue'] && /[",\r\n]/g.test(elem['revenue'])) {
+    //     elem['revenue'] = '"' + elem['revenue'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['about_link'] && /[",\r\n]/g.test(elem['about_link'])) {
+    //     elem['about_link'] = '"' + elem['about_link'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   if (elem['competitors'] && /[",\r\n]/g.test(elem['competitors'])) {
+    //     elem['competitors'] = '"' + elem['competitors'].replace(/(")/g, '""') + '"';
+    //   }
+
+    //   return elem;
+    // });
+
+    // let KeyArray = ['job_title','company','industry','location','headquarters','date'，'employees'，'revenue'，'about_link'，'competitors'];
+
+    //title ["","",""]
+    let title = obj.title;
+    //titleForKey ["","",""]
+    let titleForKey = obj.titleForKey;
+    let data = obj.data;
+    let str = [],
+        item = [];
+
+    str.push(obj.title.join(",")+"\n");
+
+    for(let i = 0, dLength = data.length; i < dLength; i++){
+
+      item = [];
+
+      for(let j = 0, tLength = titleForKey.length ; j < tLength; j++){
+
+          let value = data[i][titleForKey[j]];
+
+          if (value && /[",\r\n]/g.test(value)) {
+            value = '"' + value.replace(/(")/g, '""') + '"';
+          }
+
+          item.push(value);
       }
-
-      if (elem['company'] && /[",\r\n]/g.test(elem['company'])) {
-        elem['company'] = '"' + elem['company'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['industry'] && /[",\r\n]/g.test(elem['industry'])) {
-        elem['industry'] = '"' + elem['industry'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['location'] && /[",\r\n]/g.test(elem['location'])) {
-        elem['location'] = '"' + elem['location'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['headquarters'] && /[",\r\n]/g.test(elem['headquarters'])) {
-        elem['headquarters'] = '"' + elem['headquarters'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['date'] && /[",\r\n]/g.test(elem['date'])) {
-        elem['date'] = '"' + elem['date'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['employees'] && /[",\r\n]/g.test(elem['employees'])) {
-        elem['employees'] = '"' + elem['employees'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['revenue'] && /[",\r\n]/g.test(elem['revenue'])) {
-        elem['revenue'] = '"' + elem['revenue'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['about_link'] && /[",\r\n]/g.test(elem['about_link'])) {
-        elem['about_link'] = '"' + elem['about_link'].replace(/(")/g, '""') + '"';
-      }
-
-      if (elem['competitors'] && /[",\r\n]/g.test(elem['competitors'])) {
-        elem['competitors'] = '"' + elem['competitors'].replace(/(")/g, '""') + '"';
-      }
-
-      return elem;
-    });
-
-      //title ["","",""]
-      var title = obj.title;
-      //titleForKey ["","",""]
-      var titleForKey = obj.titleForKey;
-      var data = obj.data;
-      var str = [];
-      str.push(obj.title.join(",")+"\n");
-
-      for(var i=0;i<data.length;i++){
-          var temp = [];
-          for(var j=0;j<titleForKey.length;j++){
-              temp.push(data[i][titleForKey[j]]);
-        }
-        str.push(temp.join(",")+"\n");
+      str.push(item.join(",")+"\n");
     }
 
-    var url = 'data:text/csv;charset=utf-8,' + encodeURIComponent("\uFEFF" + str.join(""));  //添加BOM头
-    var downloadLink = document.createElement("a");
-    downloadLink.href = url;
+    //let url = 'data:text/csv;charset=utf-8,' + encodeURIComponent("\uFEFF" + str.join(""));  //添加BOM头
+
+    str = "\uFEFF" + str.join("")
+    let blob = new Blob([str], {type: 'text/csv,charset=UTF-8'});
+    let csvUrl = URL.createObjectURL(blob);
+
+    let downloadLink = document.createElement("a");
+    downloadLink.href = csvUrl;
     downloadLink.download = obj.fileName+".csv";
     document.body.appendChild(downloadLink);
     downloadLink.click();

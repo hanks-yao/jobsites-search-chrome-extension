@@ -46,28 +46,28 @@ DB.prototype = {
       // usersStore.createIndex("name", "name", { unique : false });
     }.bind(this);
   },
-  addData: function(storeName) {
-    console.log(this);
-    var users = [{
-      id : '001',
-      name : '刘亦菲',
-      age : 18
-    },{
-      id : '002',
-      name : '杨幂',
-      age : 19
-    },{
-      id : '005',
-      name : '柳岩',
-      age : 20,
-      ohter: 123
-    }];
+  addData: function(storeName, data) {
+    // console.log(this);
+    // var users = [{
+    //   id : '001',
+    //   name : '刘亦菲',
+    //   age : 18
+    // },{
+    //   id : '002',
+    //   name : '杨幂',
+    //   age : 19
+    // },{
+    //   id : '005',
+    //   name : '柳岩',
+    //   age : 20,
+    //   ohter: 123
+    // }];
 
     var store = this.db.transaction(storeName, READ_WRITE).objectStore(storeName);
 
-    var i = 0, len = users.length;
+    var i = 0, len = data.length;
     while(i < len){
-      var req= store.add(users[i++]);
+      var req= store.add(data[i++]);
       req.onsuccess = function (evt) {
         console.log("addData success:", evt.target.result);
       };
@@ -76,14 +76,16 @@ DB.prototype = {
       };
     }
   },
-  updateData: function() {
-    var tx = this.db.transaction("users", READ_WRITE);
-    var store = tx.objectStore("users");
-    var req = store.put({
-      id : '001',
-      name : '刘亦菲-小龙女',
-      age : 18
-    });
+  updateData: function(storeName, data) {
+    var store = this.db.transaction(storeName, READ_WRITE).objectStore(storeName);
+
+    var req = store.put(data);
+
+    // var req = store.put({
+    //   id : '001',
+    //   name : '刘亦菲-小龙女',
+    //   age : 18
+    // });
     req.onsuccess = function (evt) {
       console.log("updateData success");
     };
@@ -91,10 +93,10 @@ DB.prototype = {
       console.error("updateData error:", evt.target.errorCode || evt.target.error);
     };
   },
-  getData: function() {
-    var tx = this.db.transaction("users");
-      var store = tx.objectStore("users");
-    var req = store.get("001");
+  getData: function(storeName, index) {
+    var store = this.db.transaction(storeName).objectStore(storeName);
+
+    var req = store.get(index);
     req.onsuccess = function (evt) {
       var res = evt.target.result;
       console.log(res);
@@ -103,10 +105,10 @@ DB.prototype = {
       console.error("getData error:", evt.target.errorCode || evt.target.error);
     };
   },
-  delData: function() {
-    var tx = this.db.transaction("users", READ_WRITE);
-      var store = tx.objectStore("users");
-    var req = store.delete("001");
+  delData: function(storeName, index) {
+    var store = this.db.transaction(storeName).objectStore(storeName);
+
+    var req = store.delete(index);
     req.onsuccess = function (evt) {
       console.log("delData success");
     };
@@ -115,8 +117,8 @@ DB.prototype = {
     };
   },
   clearData: function() {
-    var tx = this.db.transaction("users", READ_WRITE);
-    var store = tx.objectStore("users");
+    var store = this.db.transaction(storeName).objectStore(storeName);
+
     var req = store.clear();
     req.onsuccess = function (evt) {
       console.log("clearData success");

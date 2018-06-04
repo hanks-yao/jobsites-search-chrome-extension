@@ -12,7 +12,7 @@ let fun = {
       element['job_title'] = $parent.find('div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a').text().trim();
 
       //过滤title中不包含keywords的job
-      if ( filter && (filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
+      if (filter && (filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
         continue;
       }
 
