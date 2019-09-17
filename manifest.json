@@ -1,7 +1,7 @@
 {
   "name": "Jobsites Search",
   "description": "Jobsites Search",
-  "version": "0.4",
+  "version": "0.7",
   "manifest_version": 2,
   "permissions": ["tabs","declarativeContent"],
   "background": {

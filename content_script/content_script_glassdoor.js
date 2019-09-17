@@ -16,7 +16,8 @@ let fun = {
         continue;
       }
 
-      element['company_id'] = $parent.data('emp-id');
+      // element['company_id'] = $parent.data('emp-id');
+      element['joblist_id'] = $parent.data('id');
       element['date'] = $parent.find('div:nth-child(2) span.hideHH').text().trim();
 
       let comAndLoc = $parent.find('div:nth-child(2) > div.flexbox.empLoc > div:nth-child(1)').text();
@@ -42,9 +43,21 @@ let fun = {
     };
   },
   isLastPage: function() {
+    // 1,没有数据，isLastPage return 1；
+    // 2,只有一页数据 isLastPage return 2；
+    // 3,多页数据且当前不是最后一页 isLastPage return 0；
+    // 4,多页数据且当前是最后一页 isLastPage return 1；
+
     let pageRes = fun.getPage();
 
-    return  pageRes['current_page'] == pageRes['pages'];
+    if (pageRes['pages'] == 1) { //只有一页数据
+      return 2;
+    } else if (Number.isNaN(pageRes['pages'])) { //没有数据
+      return 1;
+    } else {
+      return Number(pageRes['current_page'] == pageRes['pages']);
+    }
+
   },
   includeKeywords: function(target, keywords) {
     let t = target.toLocaleLowerCase();
@@ -86,11 +99,13 @@ chrome.runtime.onMessage.addListener(
       console.log('getNextPageUrl:');
       console.log(request);
 
-      if (fun.isLastPage()) {
-        sendResponse(false);
+      if (fun.isLastPage() === 2) {
+        sendResponse({'only_page': true});
+      } else if (fun.isLastPage() === 1) {
+        sendResponse({'is_last': true});
       } else {
         let url = $('#FooterPageNav').find('li.next > a').attr('href');
-        sendResponse(url);
+        sendResponse({'url': url});
       }
     } else if (request.crawlBasicInfo) { //新开的window监听backgournd发送抓取basis的请求
       console.log("crawlBasicInfo:");
@@ -121,8 +136,8 @@ chrome.runtime.onMessage.addListener(
       let data = request.data;
 
       ufn.exportCsv({
-        title:['Title','Company','Location','Date','Industry','Headquarters','Size','Revenue','Domain','Type','Founded','Competitors','Company ID'],
-        titleForKey:['job_title','company','location','date','industry','headquarters','size','revenue','domain','type','founded','competitors','company_id'],
+        title:['Title','Company','Location','Date','Industry','Headquarters','Size','Revenue','Domain','Type','Founded','Competitors'],
+        titleForKey:['job_title','company','location','date','industry','headquarters','size','revenue','domain','type','founded','competitors'],
         data: data,
         fileName: 'Glassdoor-jobs',
       });

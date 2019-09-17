@@ -30,7 +30,7 @@ chrome.runtime.onMessage.addListener(
 
       let pages = request.pages;
 
-      getJobsInfo(pages).then(function(res){
+      getJobsMain(pages).then(function(res){
         console.log(res);
         hidePopupTips();
       });
@@ -38,42 +38,60 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+//全局变量
+//停止运行
+let pause = 0;
+
 // common
-async function getJobsInfo(pages) {
+// Main一共分为3个步骤
+async function getJobsMain(pages) {
+  //1.获取页面job信息
   let result = await getBasis(pages);
   let tabId = result.tab_id,
       tabUrl = result.tab_url,
-      jobs = result.data;
+      jobs;
 
+  //2.获取company信息
+  //从indexDB获取抓取company的参数，再通过新开页面或api获取信息
   if (tabUrl.indexOf('indeed.com') > -1) {
-    jobs = await appendDetail(jobs);
+    jobs = await appendDetail2();
   } else if (tabUrl.indexOf('glassdoor.com') > -1) {
-    jobs = await glAppendDetail(jobs);
+    jobs = await glAppendDetail2();
   } else {
     return;
   }
 
   console.log(jobs);
+  //3.下载抓取的结果
   let res = await requestDownload(tabId, jobs);
   return res;
 }
 
 // common
+// 根据是否有配置文件，对应不同的抓取方式
 async function getBasis(pages) {
-  console.log('getBasis');
+
+  let tab = await getCurrentTab(),
+      db;
+
+  //清空indexDB保存的数据
+  if (tab.url.indexOf('indeed.com') > -1) {
+    db = 'indeed_store';
+  } else if (tab.url.indexOf('glassdoor.com') > -1) {
+    db = 'glassdoor_store';
+  }
+  sql.clearData(db);
 
   let config = getConfig();
-  let tab = await getCurrentTab();
-
   if (config) {
     return await getBasisByConfig(tab, pages, config);
   } else {
-    return await getBasisByDefault(tab, pages);
+    return await getBasisByDefault(tab, pages, db);
   }
 }
 
 // common
-async function getBasisByDefault(tab, pages) {
+async function getBasisByDefault(tab, pages, db) {
   console.log('getBasisByDefault');
 
   let tabId = tab.id,
@@ -84,12 +102,6 @@ async function getBasisByDefault(tab, pages) {
 
   for (let i = 1 ; i <= pages; i++) {
     setPopupTips(`Getting jobs : ${i}/${pages}`);
-
-    // do {
-    //   await delayXSeconds(2);
-
-    //   tab = await getCurrentTab();
-    // } while (!tab);
 
     await isTabComplete(tabId);
 
@@ -104,7 +116,7 @@ async function getBasisByDefault(tab, pages) {
 
     records = records.concat(temp.data);
 
-    let isNext = await gotoNextPage(tab.id);
+    let isNext = await gotoNextPage(tabId);
     //console.log(isNext);
     if (!isNext) {
       break;
@@ -112,6 +124,8 @@ async function getBasisByDefault(tab, pages) {
   }
 
   console.log(records);
+  sql.addData(db, records);
+
   return {
     tab_id: tab.id,
     tab_url: tab.url,
@@ -131,53 +145,85 @@ async function getBasisByConfig(tab, pages, config) {
   await isTabComplete(tabId);
 
   if (tabUrl.indexOf('indeed.com') > -1) {
+
     //发送配置信息给content script
     //遍历设置location, 并抓取对应页数的jobs
 
-    let locationArray = config.location;
+    let locationArray = config.location,
+        temp;
 
-    for (let n in locationArray) {
-      if(await sendConfig(tabId, {location: locationArray[n]})) {
-        let temp = await getBasisByDefault(tab, pages);
+    for (let i = 0, l = locationArray.length; i < l; i++) {
+
+      if(await sendConfig(tabId, {location: locationArray[i]})) {
+        temp = await getBasisByDefault(tab, pages, 'indeed_store');
 
         records = records.concat(temp.data);
       }
 
+      localStorage.setItem('last_config', locationArray[i]);
     }
-
-
   } else if (tabUrl.indexOf('glassdoor.com') > -1) {
+
     let locationArray = config.location,
         industryArray = config.industry,
         sizeArray     = config.size;
 
-    let locationDef = await getLocationDef();
+    console.log(industryArray.length*sizeArray.length);
 
-    for (let i = 0; i < locationArray.length; i++) {
+    let configArray = [];
 
-      // 在页面中设置location,然后跳转下一页, 获取所需的url
-      let key = locationArray[i],
-          location = {
-            type: locationDef[key]['location_type'],
-            id: locationDef[key]['location_id']
-          };
-
-      let url = await getUrlByLoc(tabId, location);
-
-      for (let m = 0; m < industryArray.length; m++) {
-
-        for (let n = 0; n < sizeArray.length; n++) {
-          console.log(tabId, locationArray[i], industryArray[m], sizeArray[n]);
-
-          await setConfig(tabId, url, industryArray[m], sizeArray[n]);
-
-          let temp = await getBasisByDefault(tab, pages);
-
-          records = records.concat(temp.data);
+    for (let i = 0, lLength = locationArray.length; i < lLength; i++) {
+      for (let j = 0, iLength = industryArray.length; j < iLength; j++) {
+        for (let k = 0, sLength = sizeArray.length; k < sLength; k++) {
+          configArray.push(locationArray[i] + ',' + industryArray[j] + ',' + sizeArray[k]);
         }
       }
     }
 
+    console.log(configArray);
+    localStorage.setItem('glassdoor_config',configArray);
+
+    let locationDef = await getLocationDef(),
+        lastLoc, lastUrl;
+
+    for (let i = 0, cLength = configArray.length; i < cLength; i++) {
+      console.log(configArray[i]);
+
+      let currentConfig = configArray[i].split(','),
+          locKey = currentConfig[0],
+          indKey = currentConfig[1],
+          sizeKey = currentConfig[2],
+          location = {
+            type: locationDef[locKey]['location_type'],
+            id: locationDef[locKey]['location_id']
+          };
+
+      let url, temp;
+
+
+      if (lastLoc != locKey) {
+        url = lastUrl = await getUrlByLoc(tabId, location);
+      } else {
+        url = lastUrl;
+      }
+      lastLoc = locKey;
+
+      //只有一页数据, 不需要设置industry和company size
+      if (url === 1) {
+        i = i + industryArray.length*sizeArray.length - 1; //跳过该location的抓取
+      } else if (url === 0) {
+        continue;
+      } else {
+        await setConfig(tabId, url, indKey, sizeKey);
+      }
+
+      temp = await getBasisByDefault(tab, pages, 'glassdoor_store');
+
+      records = records.concat(temp.data);
+
+      //保存当前抓取进度
+      localStorage.setItem('last_config', configArray[i]);
+    }
   } else {
     return;
   }
@@ -256,6 +302,61 @@ async function appendDetail(jobs){
   return jobs;
 }
 
+async function appendDetail2() {
+  let jobs = await getDataFromIndexDB('indeed_store');
+
+  const interval = 5;
+  let jobsLength = jobs.length,
+      quotient = parseInt(jobsLength/interval),
+      remainder = jobsLength%interval;
+
+  let windows,length,linkArray;
+
+  for (let m = 0; m <= quotient; m++) {
+    linkArray = [];
+
+    if (m == quotient) {
+      length = remainder;
+    } else {
+      length = interval;
+    }
+
+    for (let n = 0; n < length; n++) {
+      console.log(m, interval, n, m*interval + n);
+
+      if (jobs[m*interval + n]['about_link']) {
+        linkArray.push(jobs[m*interval + n]['about_link']);
+      } else {
+        continue;
+      }
+    }
+
+    windows = await createWindow(linkArray);
+
+    let i = 0;
+    for (let n = 0; n < length; n++) {
+      let index = m*interval + n;
+
+      setPopupTips(`Getting companies : ${index+1}/${jobsLength}`);
+
+      if (jobs[index]['about_link']) {
+        let tabId = windows['tabs'][i]['id'];
+        let detail = await getDetailFromTab(tabId);
+        Object.assign(jobs[index], detail);
+        sql.updateData('indeed_store', jobs[index]);
+        i++;
+      } else {
+        continue;
+        localStorage.setItem('last_jobs_id', jobs[index]['id']);
+      }
+    }
+
+    chrome.windows.remove(windows.id);
+  }
+
+  return jobs;
+}
+
 // indeed
 // 创建window, 并返回对应的tabId
 function createWindow(link){
@@ -289,7 +390,7 @@ async function getDetailFromTab(tabId) {
     // chrome.tabs.remove(tabId);
     return res;
   } else {
-    console.info('try again');
+    // console.info('try again');
     await delayXSeconds(1);
     return await getDetailFromTab(tabId);
   }
@@ -309,15 +410,28 @@ function requestDetail(tabId) {
 // 获取指定location的url
 async function getUrlByLoc(tabId, location){
   console.log("getUrlByLoc:");
-  console.log(arguments);
 
   await sendConfig(tabId, {location: location});
 
   await isTabComplete(tabId);
 
   //获取下一页的链接, 并处理url, ?industryId=1011&employerSizes=1
-  let url = await getNextPageUrl(tabId);
-  // if (!url) {}
+  let res = await getNextPageUrl(tabId),
+      url = res['url'];
+
+  if (res['only_page']) {
+    return 1;
+  } else if (res['is_last']) {
+    return 0;
+  } else {
+    while (!url) {
+      await reloadTab(tabId);
+      await isTabComplete(tabId);
+
+      url = await getNextPageUrl(tabId);
+    }
+  }
+
 
   let index = url.lastIndexOf('_IP2');
 
@@ -364,14 +478,34 @@ async function glAppendDetail(jobs){
   return jobs;
 }
 
+async function glAppendDetail2() {
+  let jobs = await getDataFromIndexDB('glassdoor_store');
+
+  for (var i = 0, jLength = jobs.length; i < jLength; i++) {
+    setPopupTips(`Getting companies : ${i+1}/${jLength}`);
+
+    let jobListingId = jobs[i]['joblist_id'];
+    if (!jobListingId) {continue;}
+
+    try {
+      let detail = await glGetCompanyInfo(jobListingId);
+      Object.assign(jobs[i], detail);
+      sql.updateData('glassdoor_store', jobs[i]);
+    } catch (e) {
+      continue;
+      localStorage.setItem('last_jobs_id', jobs[i]['id']);
+    }
+  }
+
+  return jobs;
+}
+
 // glassdoor
 // 异步获取company信息
 function glGetCompanyInfo(id) {
-  let url = 'https://www.glassdoor.com/Job/overview/companyOverviewBasicInfoAjax.htm',
+  let url = 'https://www.glassdoor.com/job-listing/details.htm',
       params = {
-        employerId: id,
-        title: 'Overview',
-        linkCompetitors: 'true',
+        jobListingId: id
       };
 
   return new Promise(function(resolve, reject){
@@ -395,8 +529,9 @@ function glGetCompanyInfo(id) {
 // 从异步获取的数据中提取出需要的信息
 function glProcessDom(dom) {
   let res = {};
-  let $html = $(dom);
-      $items = $html.find('.infoEntity');
+  let $html = $(dom),
+      $parent = $html.find('#EmpBasicInfo .info'),
+      $items = $parent.find('.infoEntity');
 
   for (let i = 0; i < $items.length; i++) {
     let $item= $($items[i]),
@@ -407,15 +542,25 @@ function glProcessDom(dom) {
       value = value.replace(/\s/g,"");
     }
 
-    res[key] = value;
+    if (key == 'website') {
+      res['domain'] = ufn.getUrlDomamin(value);
+    } else {
+      res[key] = value;
+    }
   }
 
-  let website = $html.find('.website').children('a').attr('href');
-  if (website) {
-    res['domain'] = ufn.getUrlDomamin(website);
-  }
+  // let website = $html.find('.website').children('a').attr('href');
+  // if (website) {
+  //   res['domain'] = ufn.getUrlDomamin(website);
+  // }
 
   return res;
+}
+
+function getDataFromIndexDB(storeName) {
+  return new Promise(function(resolve, reject){
+    sql.getAllData(storeName, resolve);
+  });
 }
 
 // common
@@ -475,9 +620,9 @@ function getTab(id){
 }
 
 // 重载指定id的tab
-function reloadTab(id){
+function reloadTab(tabid){
   return new Promise(function(resolve, reject){
-    chrome.tabs.reload(id, {bypassCache: true}, function(res){
+    chrome.tabs.reload(tabid, {bypassCache: true}, function(res){
       console.log(res);
       resolve(res);
     })
@@ -486,8 +631,6 @@ function reloadTab(id){
 
 // 指定tabId的页面是否加载完成
 async function isTabComplete(tabId){
-  console.log("isTabComplete:");
-
   let tab;
 
   do{
@@ -571,7 +714,6 @@ function getNextPageUrl(tabId) {
 function requestDownload(tabId, jobs) {
   return new Promise(function(resolve, reject){
     chrome.tabs.sendMessage(tabId, {downloadFile: true,data:jobs}, function(response) {
-      console.log(response);
       resolve(response);
     });
   });
@@ -593,4 +735,13 @@ function createAndDownloadFile(content) {
   aTag.href = URL.createObjectURL(blob);
   aTag.click();
   URL.revokeObjectURL(blob);
+}
+
+function test() {
+  console.log(1);
+
+  throw new Error('pause!');
+
+  console.log(2);
+
 }

@@ -40,15 +40,16 @@ $(document).ready(function() {
     let $this = $(this),
       pages = parseInt($('#pages').val());
 
-    if (pages <= 0) {
-      alter('Invalid Page Number!');
-    } else {
+    if (pages >= 0) {
       $this.prop('disabled', true);
       $('#tipsDiv').show();
 
       chrome.runtime.sendMessage({getJobsInfo:true, pages:pages}, function(response){
         console.log(response);
       });
+    } else {
+      alert('Invalid Page Number!');
+      return;
     }
   });
 
