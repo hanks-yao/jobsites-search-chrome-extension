@@ -37,7 +37,7 @@ let fun = {
   getDetailedInfo: function(){
     let res = {};
     let $detialBlock1 = $('#cmp-company-details-sidebar');
-    let $detialBlock2 = $('#company-details-section');
+    // let $detialBlock2 = $('#company-details-section');
 
     if ($detialBlock1.length) {
       let items = $detialBlock1.children('dt');
@@ -59,28 +59,6 @@ let fun = {
           }
         } else {
           res[key] = value;
-        }
-      }
-    } else if ($detialBlock2.length) {
-      let itemDivs = $detialBlock2.find('.cmp-CompanyDetailSection');
-
-      for (let i = 0; i < itemDivs.length; i++) {
-        let $item = $(itemDivs[i]),
-            key = $item.children('.cmp-CompanyDetailSection-title').text().toLowerCase(),
-            $valueDiv = $item.children('.cmp-CompanyDetailSection-content');
-
-        if (key == 'links') {
-          let links = $valueDiv.find('a');
-
-          for (var n = 0; n < links.length; n++) {
-            let $a = $(links[n]);
-
-            if($a.text().indexOf('website') != -1){
-              res['domain'] = ufn.getUrlDomamin($a.attr('href'));
-            }
-          }
-        } else {
-          res[key] = $valueDiv.text();
         }
       }
     }

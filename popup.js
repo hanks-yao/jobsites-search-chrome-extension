@@ -31,8 +31,6 @@ var fun = {
 })();
 
 
-
-
 $(document).ready(function() {
   $('#startBtn').on('click', function(event) {
     event.preventDefault();

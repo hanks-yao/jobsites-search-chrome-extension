@@ -9,21 +9,22 @@ let fun = {
       let $parent = $($parents[i]),
           element = {};
 
-      element['job_title'] = $parent.find('div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > a').text().trim();
+      element['jobTitle'] = $parent.find('.jobContainer > a.jobTitle').text().trim();
 
       //过滤title中不包含keywords的job
       if (filter && (filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
         continue;
       }
 
-      // element['company_id'] = $parent.data('emp-id');
       element['joblist_id'] = $parent.data('id');
-      element['date'] = $parent.find('div:nth-child(2) span.hideHH').text().trim();
 
-      let comAndLoc = $parent.find('div:nth-child(2) > div.flexbox.empLoc > div:nth-child(1)').text();
-      let index = comAndLoc.indexOf(' – ');
-      element['company'] = comAndLoc.substring(0, index).trim();
-      element['location'] = comAndLoc.substring(index+3);
+      // 只获取页面展示company的id，详细信息通过api获取
+      // element['company_id'] = $parent.data('emp-id');
+      // element['date'] = $parent.find('div:nth-child(2) span.hideHH').text().trim();
+      // let comAndLoc = $parent.find('div:nth-child(2) > div.flexbox.empLoc > div:nth-child(1)').text();
+      // let index = comAndLoc.indexOf(' – ');
+      // element['company'] = comAndLoc.substring(0, index).trim();
+      // element['location'] = comAndLoc.substring(index+3);
 
 
       result.push(element);
@@ -136,8 +137,8 @@ chrome.runtime.onMessage.addListener(
       let data = request.data;
 
       ufn.exportCsv({
-        title:['Title','Company','Location','Date','Industry','Headquarters','Size','Revenue','Domain','Type','Founded','Competitors'],
-        titleForKey:['job_title','company','location','date','industry','headquarters','size','revenue','domain','type','founded','competitors'],
+        title:['Job-Title','Company','Headquarters','Size','Founded','Type','Industry','Sector','Revenue','Stock','Domain'],
+        titleForKey:['jobTitle','company','hq','size','foundedYear','type','industry','sector','revenue','stock','domain'],
         data: data,
         fileName: 'Glassdoor-jobs',
       });

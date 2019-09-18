@@ -31,6 +31,7 @@ chrome.runtime.onMessage.addListener(
       let pages = request.pages;
 
       getJobsMain(pages).then(function(res){
+        console.log('Finally:');
         console.log(res);
         hidePopupTips();
       });
@@ -38,9 +39,12 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
+
 //全局变量
 //停止运行
 let pause = 0;
+
+const glFields = ['foundedYear', 'hq', 'industry', 'industryId', 'revenue', 'sector', 'sectorId', 'size', 'stock', 'type', 'website'];
 
 // common
 // Main一共分为3个步骤
@@ -304,6 +308,7 @@ async function appendDetail(jobs){
 
 async function appendDetail2() {
   let jobs = await getDataFromIndexDB('indeed_store');
+  console.log(jobs);
 
   const interval = 5;
   let jobsLength = jobs.length,
@@ -331,6 +336,7 @@ async function appendDetail2() {
       }
     }
 
+    console.log(linkArray);
     windows = await createWindow(linkArray);
 
     let i = 0;
@@ -384,13 +390,15 @@ function createWindow(link){
 async function getDetailFromTab(tabId) {
   await delayXSeconds(2);
   let res = await requestDetail(tabId);
+  console.log("getDetailFromTab: ", tabId);
+  console.log(res);
 
   if (res) {
     // console.info('remove window');
     // chrome.tabs.remove(tabId);
     return res;
   } else {
-    // console.info('try again');
+    console.info('try again');
     await delayXSeconds(1);
     return await getDetailFromTab(tabId);
   }
@@ -400,6 +408,7 @@ async function getDetailFromTab(tabId) {
 // 根据tabid, 发送抓取detail信息请求
 function requestDetail(tabId) {
   return new Promise(function(resolve, reject){
+    console.log('requestDetail');
     chrome.tabs.sendMessage(tabId, {crawlDetailedInfo: true}, function(response) {
         resolve(response);
     });
@@ -503,7 +512,7 @@ async function glAppendDetail2() {
 // glassdoor
 // 异步获取company信息
 function glGetCompanyInfo(id) {
-  let url = 'https://www.glassdoor.com/job-listing/details.htm',
+  let url = 'https://www.glassdoor.com/Job/json/details.htm',
       params = {
         jobListingId: id
       };
@@ -527,34 +536,18 @@ function glGetCompanyInfo(id) {
 
 // glassdoor
 // 从异步获取的数据中提取出需要的信息
-function glProcessDom(dom) {
-  let res = {};
-  let $html = $(dom),
-      $parent = $html.find('#EmpBasicInfo .info'),
-      $items = $parent.find('.infoEntity');
+function glProcessDom(res) {
+  const { overview, header, map } = res;
+  const { employerName: company} = header
+  const { address, postalCode } = map
 
-  for (let i = 0; i < $items.length; i++) {
-    let $item= $($items[i]),
-        key = $item.children('label').text().toLowerCase(),
-        value = $item.children('.value').text().trim();
+  // const keys = Object.keys(overview);
 
-    if (key == 'type') {
-      value = value.replace(/\s/g,"");
-    }
-
-    if (key == 'website') {
-      res['domain'] = ufn.getUrlDomamin(value);
-    } else {
-      res[key] = value;
-    }
+  if (overview.website) {
+    overview.domain = ufn.getUrlDomamin(overview.website);
   }
 
-  // let website = $html.find('.website').children('a').attr('href');
-  // if (website) {
-  //   res['domain'] = ufn.getUrlDomamin(website);
-  // }
-
-  return res;
+  return {company, address, postalCode, ...overview};
 }
 
 function getDataFromIndexDB(storeName) {
