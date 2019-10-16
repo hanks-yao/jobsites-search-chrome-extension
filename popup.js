@@ -42,9 +42,7 @@ $(document).ready(function() {
       $this.prop('disabled', true);
       $('#tipsDiv').show();
 
-      chrome.runtime.sendMessage({getJobsInfo:true, pages:pages}, function(response){
-        console.log(response);
-      });
+      chrome.runtime.sendMessage({getJobsInfo:true, pages:pages});
     } else {
       alert('Invalid Page Number!');
       return;
@@ -89,5 +87,7 @@ chrome.runtime.onMessage.addListener(
     } else if (request.setPopupTips) {
       $('#tips').text(request.text);
     }
+
+    return true;
   }
 );

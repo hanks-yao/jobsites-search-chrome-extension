@@ -1,6 +1,6 @@
 console.log('content_scritp loaded!');
 
-let fun = {
+const fun = {
   getBasicInfo: function(filter){
     let $parents = $('.clickcard');
     let result = [];
@@ -183,5 +183,7 @@ chrome.runtime.onMessage.addListener(
 
       sendResponse(true);
     }
+
+    return true;
 
 });

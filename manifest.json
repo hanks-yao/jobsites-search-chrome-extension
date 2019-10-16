@@ -1,7 +1,7 @@
 {
   "name": "Jobsites Search",
   "description": "Jobsites Search",
-  "version": "0.7",
+  "version": "0.9",
   "manifest_version": 2,
   "permissions": ["tabs","declarativeContent","activeTab"],
   "background": {
@@ -19,8 +19,16 @@
     }, {
       "matches": ["*://*.glassdoor.com/Job*"],
       "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script_glassdoor.js"]
+    }, {
+      "matches": ["*://*.linkedin.com/*"],
+      "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script_linkedin.js"]
     }
   ],
+  "options_page": "options.html",
+  // "options_ui": {
+  //   "page": "options.html",
+  //   "open_in_tab": false
+  // },
   "icons": {
     "16": "images/icon16.png",
     "32": "images/icon32.png",

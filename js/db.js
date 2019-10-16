@@ -3,6 +3,7 @@ var DB = function() {
   this.DB_NAME = 'Jobsites';
   this.Indeed_STORE_NAME = 'indeed_store';
   this.Glassdoor_STORE_NAME = 'glassdoor_store';
+  this.Linkedin_STORE_NAME = 'linkedin_store';
   this.DB_VERSION = 1; //使用正整数，别用浮点型
   this.db;
   this.READ_WRITE = 'readwrite';
@@ -48,6 +49,12 @@ DB.prototype = {
         this.db.deleteObjectStore(this.Glassdoor_STORE_NAME);
       }
 
+      if (stores.contains(this.Linkedin_STORE_NAME)) {
+        console.log(2);
+
+        this.db.deleteObjectStore(this.Linkedin_STORE_NAME);
+      }
+
       var indeedStore = this.db.createObjectStore(
         this.Indeed_STORE_NAME,
         { keyPath: 'id', autoIncrement: true }
@@ -55,6 +62,11 @@ DB.prototype = {
 
       var glassdoorStore = this.db.createObjectStore(
         this.Glassdoor_STORE_NAME,
+        { keyPath: 'id', autoIncrement: true }
+      );
+
+      var glassdoorStore = this.db.createObjectStore(
+        this.Linkedin_STORE_NAME,
         { keyPath: 'id', autoIncrement: true }
       );
 
@@ -149,11 +161,13 @@ DB.prototype = {
     };
   },
   clearData: function(storeName) {
+    console.log(storeName);
+
     var store = this.db.transaction(storeName, this.READ_WRITE).objectStore(storeName);
 
     var req = store.clear();
     req.onsuccess = function (evt) {
-      console.log("clearData success");
+      console.log(`clear ${storeName} success`);
     };
     req.onerror = function (evt) {
       console.error("clearData error:", evt.target.errorCode || evt.target.error);
@@ -273,11 +287,13 @@ var sql = new DB();
 sql.initDb(sql.DB_NAME, sql.DB_VERSION);
 
 
+/*
 // var DB_NAME = 'DEMO';
 // var DB_VERSION = 1; //使用正整数，别用浮点型
 // var db;
 // var READ_WRITE = 'readwrite';
 // var READ_ONLY = 'readonly';
+
 
 function initDb() {
   console.log("initDb ...");
@@ -300,7 +316,7 @@ function initDb() {
   };
 }
 
-// initDb();
+initDb();
 
 function addData(){
   var users = [{
@@ -450,3 +466,4 @@ function indexNames(){
     console.log(index);
   }
 }
+*/

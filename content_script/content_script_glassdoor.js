@@ -12,7 +12,7 @@ let fun = {
       element['jobTitle'] = $parent.find('.jobContainer > a.jobTitle').text().trim();
 
       //过滤title中不包含keywords的job
-      if (filter && (filter.length > 0) && (!fun.includeKeywords(element['job_title'], filter))) {
+      if (filter && (filter.length > 0) && (!fun.includeKeywords(element['jobTitle'], filter))) {
         continue;
       }
 
@@ -29,7 +29,7 @@ let fun = {
 
       result.push(element);
     }
-    console.log(result);
+
     return result;
   },
   getPage: function() {
@@ -74,11 +74,14 @@ let fun = {
 
 };
 
+$(document).ready(function() {
+  console.log('document ready!');
+});
+
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
 
     if (request.setParameters) {
-      console.log(request);
       let location = request.config.location,
           url      = request.config.url;
 
@@ -118,7 +121,6 @@ chrome.runtime.onMessage.addListener(
       res['data'] = fun.getBasicInfo(filter),
       //res['current_page'] = fun.getPage()['current_page'],
       //res['is_last'] = fun.isLastPage();
-
       sendResponse(res);
     } else if (request.gotoNextPage) {
       console.log('gotoNextPage:');
@@ -146,4 +148,5 @@ chrome.runtime.onMessage.addListener(
       sendResponse(true);
     }
 
+    return true;
 });

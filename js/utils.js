@@ -1,5 +1,6 @@
 var ufn = {
   getUrlDomamin: function(url) {
+    if (!url) {return;}
 
     let temp;
 
