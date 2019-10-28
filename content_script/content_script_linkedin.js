@@ -72,7 +72,7 @@ const fun = {
 		return true;
 	},
 	goToNextPage: function() {
-		const $current = $('.search-results-pagination-section .artdeco-pagination__pages > .artdeco-pagination__indicator.active');
+		const $current = $('.artdeco-pagination__pages > .artdeco-pagination__indicator.active');
 		const $next = $current.next();
 
 		if ($next.length) {
@@ -83,13 +83,13 @@ const fun = {
 		return false;
 	},
 	getTotalPage: function() {
-		const total  = $('.search-results-pagination-section .artdeco-pagination__pages > .artdeco-pagination__indicator:last > span:first').text().trim();
+		const total  = $('.artdeco-pagination__pages > .artdeco-pagination__indicator:last > span:first').text().trim();
 
 		console.log('total: ', total);
 		return parseInt(total, 10);
 	},
 	getCurrentPage: function() {
-		const current = $('.search-results-pagination-section .artdeco-pagination__pages > .artdeco-pagination__indicator.active > span:first').text().trim();
+		const current = $('.artdeco-pagination__pages > .artdeco-pagination__indicator.active > span:first').text().trim();
 
 		return parseInt(current, 10);
 	},
