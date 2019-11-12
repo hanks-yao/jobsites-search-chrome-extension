@@ -1,4 +1,12 @@
 {
+    "US":
+    {
+        "location": "",
+        "location_type": "",
+        "location_id": "",
+        "name": "US",
+        "cn_name": "美国"
+    },
     "AL":
     {
         "location": "AL",

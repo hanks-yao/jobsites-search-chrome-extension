@@ -202,7 +202,7 @@ chrome.runtime.onMessage.addListener(
       ufn.exportCsv({
         // title:['Title','Company','Location','Industry','Headquarters','Employees','Type','Founded','Specialties','Domain','AboutLink'],
         // titleForKey:['job_title','company','location','industry','headquarters','company_size','type','founded','specialties','domain','about_link'],
-        title:['Title','Company','Location','Industry','AboutLink'],
+        title:['Title','Company','Location','AboutLink'],
         titleForKey:['job_title','company','location','about_link'],
         data: data,
         fileName: 'Linkedin-jobs',
