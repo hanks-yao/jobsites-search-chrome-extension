@@ -1,3 +1,8 @@
+// 取消 popup的弹窗
+// 增加setting页面
+// 保存查询进度，防止报错导致抓取中断，能够根据中断点继续后续的抓取
+//
+
 
 // When the extension is installed or upgraded ...
 chrome.runtime.onInstalled.addListener(function() {
@@ -620,7 +625,7 @@ const glFn = {
       popFn.setPopupTips(`Getting companies : ${i+1}/${jLength}`);
 
       let jobListingId = jobs[i]['joblist_id'];
-      if (!jobListingId) {continue;}
+      if (!jobListingId || jobs[i]['company']) {continue;}
 
       try {
         let detail = await this.glGetCompanyInfo(jobListingId);
