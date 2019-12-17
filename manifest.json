@@ -15,13 +15,13 @@
   "content_scripts": [
     {
       "matches": ["*://*.indeed.com/*", "*://indeed.com/*"],
-      "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script.js"]
+      "js": ["asset/jquery-2.0.3.js", "asset/xlsx.core.min.js", "js/utils.js", "content_script/content_script.js"]
     }, {
       "matches": ["*://*.glassdoor.com/Job*"],
-      "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script_glassdoor.js"]
+      "js": ["asset/jquery-2.0.3.js", "asset/xlsx.core.min.js", "js/utils.js", "content_script/content_script_glassdoor.js"]
     }, {
       "matches": ["*://*.linkedin.com/*"],
-      "js": ["asset/jquery-2.0.3.js", "js/utils.js", "content_script/content_script_linkedin.js"]
+      "js": ["asset/jquery-2.0.3.js", "asset/xlsx.core.min.js", "js/utils.js", "content_script/content_script_linkedin.js"]
     }
   ],
   "options_page": "options.html",
